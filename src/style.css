@@ -1,0 +1,165 @@
+@import "tailwindcss";
+
+@theme {
+  --color-dark: #0f1011;
+  --color-light: #f2f0eb;
+  --color-accent: #a48464;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+/* Базові стилі та скидання */
+:root {
+  --cursor-size: 20px;
+}
+
+body {
+  background-color: var(--color-dark);
+  color: var(--color-light);
+  overflow-x: hidden;
+  cursor: none; /* Ховаємо стандартний курсор для кастомного */
+}
+
+/* Кастомний курсор */
+#custom-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: var(--cursor-size);
+  height: var(--cursor-size);
+  border-radius: 50%;
+  background-color: var(--color-accent);
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%, -50%);
+  transition: width 0.3s ease, height 0.3s ease, background-color 0.3s ease;
+  mix-blend-mode: difference;
+}
+
+#custom-cursor.hovered {
+  width: 60px;
+  height: 60px;
+  background-color: var(--color-light);
+}
+
+/* Шум на фоні для преміального вигляду */
+.noise {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.03;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+}
+
+/* Лоадер */
+#loader {
+  position: fixed;
+  inset: 0;
+  background: var(--color-dark);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 1s cubic-bezier(0.76, 0, 0.24, 1);
+}
+.loader-text {
+  clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
+}
+.loader-text span {
+  display: inline-block;
+  transform: translateY(100%);
+}
+
+/* Приховати скроллбар */
+::-webkit-scrollbar {
+  width: 0px;
+  background: transparent;
+}
+
+/* Горизонтальний скролл секція */
+.horizontal-section {
+  height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.horizontal-container {
+  display: flex;
+  width: 400vw; /* 4 слайди = 400% ширини екрану */
+  height: 100%;
+}
+
+.panel {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  padding: 2rem;
+}
+
+/* Анімації зображень */
+.img-reveal {
+  clip-path: polygon(0 0, 100% 0, 100% 0, 0 0);
+}
+
+.image-wrapper {
+  overflow: hidden;
+  position: relative;
+  background-color: #1a1a1a;
+}
+
+.image-wrapper img {
+  transition: transform 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.panel:hover .image-wrapper img {
+  transform: scale(1.05);
+}
+
+/* CTA Кнопка (Номер телефону) */
+.cta-btn {
+  position: relative;
+  overflow: hidden;
+  display: inline-block;
+  transition: color 0.4s ease;
+}
+
+.cta-btn::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 1px;
+  background-color: var(--color-accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
+}
+
+.cta-btn:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+.cta-btn:hover {
+  color: var(--color-accent);
+}
+
+/* Parallax text */
+.text-parallax {
+  will-change: transform;
+}
+
+@keyframes scrolldown {
+  0% { transform: translateY(-100%); }
+  50% { transform: translateY(0); }
+  100% { transform: translateY(100%); }
+}
