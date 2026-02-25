@@ -98,43 +98,44 @@ const horizontalContainer = document.querySelector('.horizontal-container');
 const panels = gsap.utils.toArray('.panel');
 
 if (horizontalSection && horizontalContainer) {
-  // Calculate total scroll distance based on width
-  const getScrollAmount = () => -(horizontalContainer.scrollWidth - window.innerWidth);
+  let mm = gsap.matchMedia();
 
-  const tween = gsap.to(panels, {
-    xPercent: -100 * (panels.length - 1),
-    ease: "none",
-    scrollTrigger: {
-      trigger: horizontalSection,
-      pin: true,
-      scrub: 1,
-      end: () => `+=${horizontalContainer.scrollWidth - window.innerWidth}`,
-      invalidateOnRefresh: true
-    }
+  // Desktop (>= 768px): Horizontal Scroll Animation
+  mm.add("(min-width: 768px)", () => {
+    const tween = gsap.to(panels, {
+      xPercent: -100 * (panels.length - 1),
+      ease: "none",
+      scrollTrigger: {
+        trigger: horizontalSection,
+        pin: true,
+        scrub: 1,
+        end: () => `+=${horizontalContainer.scrollWidth - window.innerWidth}`,
+        invalidateOnRefresh: true
+      }
+    });
+
+    const revealImages = document.querySelectorAll('.img-reveal');
+    revealImages.forEach((container) => {
+      if (container.closest('.panel')) {
+        gsap.to(container, {
+          clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+          ease: "power3.inOut",
+          duration: 1.5,
+          scrollTrigger: {
+            trigger: container.closest('.panel'),
+            containerAnimation: tween,
+            start: "left center",
+            toggleActions: "play none none reverse"
+          }
+        });
+      }
+    });
   });
 
-  // 6. Image Reveal Animations
-  const revealImages = document.querySelectorAll('.img-reveal');
-
-  revealImages.forEach((container) => {
-    // For images inside the horizontal scroll, we trigger based on container position
-    let triggerEl = container.closest('.panel') ? container.closest('.panel') : container;
-
-    // If it's in the horizontal scroll, we need a special trigger calculation
-    if (container.closest('.panel')) {
-      gsap.to(container, {
-        clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
-        ease: "power3.inOut",
-        duration: 1.5,
-        scrollTrigger: {
-          trigger: container.closest('.panel'),
-          containerAnimation: tween,
-          start: "left center",
-          toggleActions: "play none none reverse"
-        }
-      });
-    } else {
-      // Standard vertical trigger
+  // Mobile (< 768px): Standard vertical reveal for panels instead of horizontal scroll
+  mm.add("(max-width: 767px)", () => {
+    const revealImages = document.querySelectorAll('.panel .img-reveal');
+    revealImages.forEach((container) => {
       gsap.to(container, {
         clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
         ease: "power3.inOut",
@@ -145,7 +146,22 @@ if (horizontalSection && horizontalContainer) {
           toggleActions: "play none none reverse"
         }
       });
-    }
+    });
+  });
+
+  // Elements outside of the horizontal scroll section always use standard vertical scrolltrigger
+  const outsideRevealImages = document.querySelectorAll('section:not(.horizontal-section) .img-reveal');
+  outsideRevealImages.forEach((container) => {
+    gsap.to(container, {
+      clipPath: "polygon(0 0, 100% 0, 100% 100%, 0 100%)",
+      ease: "power3.inOut",
+      duration: 1.5,
+      scrollTrigger: {
+        trigger: container,
+        start: "top 80%",
+        toggleActions: "play none none reverse"
+      }
+    });
   });
 }
 
