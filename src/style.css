@@ -17,7 +17,8 @@ body {
   background-color: var(--color-dark);
   color: var(--color-light);
   overflow-x: hidden;
-  cursor: none; /* Ховаємо стандартний курсор для кастомного */
+  cursor: none;
+  /* Ховаємо стандартний курсор для кастомного */
 }
 
 /* Кастомний курсор */
@@ -40,6 +41,17 @@ body {
   width: 60px;
   height: 60px;
   background-color: var(--color-light);
+}
+
+@media (pointer: coarse),
+(max-width: 768px) {
+  #custom-cursor {
+    display: none !important;
+  }
+
+  body {
+    cursor: auto !important;
+  }
 }
 
 /* Шум на фоні для преміального вигляду */
@@ -66,9 +78,11 @@ body {
   justify-content: center;
   transition: opacity 1s cubic-bezier(0.76, 0, 0.24, 1);
 }
+
 .loader-text {
   clip-path: polygon(0 0, 100% 0, 100% 100%, 0% 100%);
 }
+
 .loader-text span {
   display: inline-block;
   transform: translateY(100%);
@@ -102,7 +116,8 @@ body {
 @media (min-width: 768px) {
   .horizontal-container {
     flex-direction: row;
-    width: 400vw; /* 4 слайди = 400% ширини екрану */
+    width: 400vw;
+    /* 4 слайди = 400% ширини екрану */
     height: 100%;
   }
 }
@@ -178,7 +193,15 @@ body {
 }
 
 @keyframes scrolldown {
-  0% { transform: translateY(-100%); }
-  50% { transform: translateY(0); }
-  100% { transform: translateY(100%); }
+  0% {
+    transform: translateY(-100%);
+  }
+
+  50% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(100%);
+  }
 }
